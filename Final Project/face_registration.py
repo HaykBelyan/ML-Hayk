@@ -30,5 +30,21 @@ while True:
 		cv2.rectangle(frame, (x, y), (x+w, y+h) (0, 255, 0), 2)
 		rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 		face_encodings = face_recognition.face_encodings(rgb_frame, [(y, x+w, y+h, x)])
-	for face_encoding in face_encodings:
-	face_data.append({"name": name, "face": frame[y:y+h, x:x+w], "face_encoding": face_encoding, "access": access_list })
+		for face_encoding in face_encodings:
+			face_data.append({"name": name, "face": frame[y:y+h, :x+w], "face_encoding": face_encoding, "access": access_list })
+	cv2.imshow('Register frame', frame)
+	if cv2.waitKey(1) & 0xFF == ord('s'):
+		capture_count += 1
+		print(f"Capture {capture_count} complete!")
+	if capture_count >= 5:
+		break
+cap.release()
+cv2.destroyAllWindows()
+
+now = datetime.now()
+file_name = f"faces/{now.strftime('%Y-%m-%d-%H-%M-%S')}-{name}.pickle"
+with open(file_name, 'wb') as f:
+	pickle.dump(face_data, f)
+print(f"Face data for '{name}' saved successfully!")
+
+
