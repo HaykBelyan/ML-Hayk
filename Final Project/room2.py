@@ -50,7 +50,7 @@ while True:
         # Encode the face ROI as a feature vector
         face_encoding = face_recognition.face_encodings(
             rgb_frame, [(y, x+w, y+h, x)])[0]
-
+	
         # Perform face recognition using the loaded face data
         matched_names = []
         distances = face_recognition.face_distance(
@@ -60,17 +60,17 @@ while True:
             matched_names.append(known_face_names[np.argmin(distances)])
 
         # Draw rectangle
-        rectangle_color = (0, 255, 0) if matched_names and "room1" in [access.lower() for access in known_face_access[np.argmin(distances)]] else (
+        rectangle_color = (0, 255, 0) if matched_names and "room2" in [access.lower() for access in known_face_access[np.argmin(distances)]] else (
             0, 0, 255)  # Green if recognized and has access, red otherwise
         cv2.rectangle(frame, (x, y), (x+w, y+h), rectangle_color, 3)
 
         # Get the access text and its size
-        if matched_names and "room1" in [access.lower() for access in known_face_access[np.argmin(distances)]]:
-            access_text = f"{matched_names[0]} - Access Granted - Room 1"
+        if matched_names and "room2" in [access.lower() for access in known_face_access[np.argmin(distances)]]:
+            access_text = f"{matched_names[0]} - Access Granted - Room 2"
             # Green if recognized and has access
             access_text_color = (0, 255, 0)
         else:
-            access_text = "Unknown" if not matched_names else f"{matched_names[0]} - Access Granted - Room 1"
+            access_text = "Unknown" if not matched_names else f"{matched_names[0]} - Access Denied - Room 2"
             access_text_color = (0, 0, 255)  # Red if unrecognized or no access
         (text_width, text_height), _ = cv2.getTextSize(
             access_text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
@@ -83,7 +83,7 @@ while True:
         cv2.putText(frame, access_text, (text_x, text_y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, access_text_color, 1)
 
-    cv2.imshow("Room 1 Face Detector", frame)
+    cv2.imshow("Room 2 Face Detector", frame)
 
     if cv2.waitKey(1) == 27:
         break
